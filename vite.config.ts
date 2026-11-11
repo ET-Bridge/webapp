@@ -74,6 +74,7 @@ export default defineConfig({
         'img/logo/logo-light.png'
       ],
       manifest: {
+        id: '/',
         name: 'ETBridge Student Portal',
         short_name: 'ETBridge',
         description: 'Clean, distraction-free, high-performance student client for ETLab',

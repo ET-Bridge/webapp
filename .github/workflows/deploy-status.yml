@@ -38,7 +38,7 @@ jobs:
                 repo: context.repo.repo,
                 deployment_id: deployment.data.id,
                 state: 'success',
-                environment_url: 'https://etbridge.pages.dev',
+                environment_url: 'https://etbridge.nimd.me',
                 auto_inactive: true,
                 description: 'Deployed successfully to Cloudflare Pages'
               });

@@ -32,7 +32,7 @@
   <a href="https://web.dev/progressive-web-apps/">
     <img src="https://img.shields.io/badge/PWA-Ready-5A0FC8?style=flat-square&logo=pwa&logoColor=white" alt="PWA Ready" />
   </a>
-  <a href="https://etbridge.pages.dev/docs">
+  <a href="https://etbridge.nimd.me/docs">
     <img src="https://img.shields.io/badge/Docs-Technical%20Reference-6366f1?style=flat-square" alt="Documentation" />
   </a>
   <a href="https://github.com/nimdme/et-bridge">
@@ -87,7 +87,7 @@ ETBridge was built to provide a clean, modern alternative: instantaneous cold st
 
 A comprehensive, developer-focused technical specification explaining the zero-backend architecture, reverse-engineered ETLab REST endpoints, mathematical attendance formulas, and guide to creating your own client is available at:
 
-**[https://etbridge.pages.dev/docs](https://etbridge.pages.dev/docs)** (or route `/docs` locally)
+**[https://etbridge.nimd.me/docs](https://etbridge.nimd.me/docs)** (or route `/docs` locally)
 
 Topics covered in the documentation:
 - **System Architecture & Zero-Backend Design**: Direct browser-to-API communication with `https://api.students.etlab.app/api/v1` without intermediary proxies.
