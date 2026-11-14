@@ -17,18 +17,18 @@ import {
 } from './types'
 
 export const FALLBACK_INSTITUTES: Institute[] = [
-  { id: 'cev', name: 'College of Engineering Vadakara', shortName: 'CEV' },
-  { id: 'gcek', name: 'Government College of Engineering Kannur', shortName: 'GCEK' },
-  { id: 'mace', name: 'Mar Athanasius College of Engineering', shortName: 'MACE' },
-  { id: 'tkmce', name: 'TKM College of Engineering', shortName: 'TKMCE' },
-  { id: 'jec', name: 'Jyothi Engineering College Thrissur', shortName: 'JEC' },
-  { id: 'vjec', name: 'Vimal Jyothi College of Engineering', shortName: 'VJEC' },
-  { id: 'gecw', name: 'Government Engineering College Wayanad', shortName: 'GECW' },
-  { id: 'sbce', name: 'Sree Buddha College of Engineering', shortName: 'SBCE' },
-  { id: 'baselius', name: 'Baselius College Kottayam', shortName: 'Baselius' },
   { id: 'asiet', name: 'Adi Shankara Institute of Engineering & Tech', shortName: 'ASIET' },
+  { id: 'baselius', name: 'Baselius College Kottayam', shortName: 'Baselius' },
   { id: 'carmelcet', name: 'Carmel College of Engineering & Tech', shortName: 'CCET' },
   { id: 'christ', name: 'Christ College of Engineering Irinjalakuda', shortName: 'CCE' },
+  { id: 'cev', name: 'College of Engineering Vadakara', shortName: 'CEV' },
+  { id: 'gcek', name: 'Government College of Engineering Kannur', shortName: 'GCEK' },
+  { id: 'gecw', name: 'Government Engineering College Wayanad', shortName: 'GECW' },
+  { id: 'jec', name: 'Jyothi Engineering College Thrissur', shortName: 'JEC' },
+  { id: 'mace', name: 'Mar Athanasius College of Engineering', shortName: 'MACE' },
+  { id: 'sbce', name: 'Sree Buddha College of Engineering', shortName: 'SBCE' },
+  { id: 'tkmce', name: 'TKM College of Engineering', shortName: 'TKMCE' },
+  { id: 'vjec', name: 'Vimal Jyothi College of Engineering', shortName: 'VJEC' },
 ]
 
 export const DEMO_PROFILE: StudentProfile = {

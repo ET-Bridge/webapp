@@ -372,6 +372,13 @@ export const LandingPage: React.FC = () => {
                 Documentation
               </Link>
               <span className="text-zinc-700 dark:text-zinc-700 light:text-slate-300">•</span>
+              <Link
+                to="/privacy"
+                className="hover:text-white dark:hover:text-white light:hover:text-slate-900 transition-colors"
+              >
+                Privacy & Cookies
+              </Link>
+              <span className="text-zinc-700 dark:text-zinc-700 light:text-slate-300">•</span>
               <button
                 type="button"
                 onClick={handleDemoClick}

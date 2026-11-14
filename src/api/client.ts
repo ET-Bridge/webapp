@@ -133,6 +133,19 @@ class EtlabApiClient {
     } catch {}
   }
 
+  public clearAllData(): void {
+    this.setSession(null)
+    this.clearAllCache()
+    try {
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i)
+        if (k && k.startsWith('etbridge_')) {
+          localStorage.removeItem(k)
+        }
+      }
+    } catch {}
+  }
+
   private getEndpointUrl(endpoint: string): URL {
     const base = API_BASE_URL.startsWith('http')
       ? API_BASE_URL

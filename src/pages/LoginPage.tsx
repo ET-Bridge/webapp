@@ -88,7 +88,7 @@ export const LoginPage: React.FC = () => {
     }
 
     if (!username.trim() || !password) {
-      setError('Please enter both your Admission/KTU ID and password.')
+      setError('Please enter both your ETLab username and ETLab password.')
       return
     }
 
@@ -238,16 +238,16 @@ export const LoginPage: React.FC = () => {
               )}
             </div>
 
-            {/* Username / Admission ID */}
+            {/* Username */}
             <div>
               <label className="block text-xs font-semibold text-zinc-300 mb-1.5">
-                Admission No / KTU ID
+                ETLab Username
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="e.g. VDA22CS045"
+                  placeholder="e.g. username or admission number"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-all font-mono"
@@ -322,9 +322,14 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Privacy Note */}
-        <div className="mt-6 text-center text-xs text-zinc-500 flex items-center justify-center gap-1.5">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>Zero-knowledge: Credentials are sent directly to ETLab</span>
+        <div className="mt-6 text-center text-xs text-zinc-500 flex flex-col items-center justify-center gap-1.5">
+          <div className="flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>Zero-knowledge: Credentials are sent directly to ETLab</span>
+          </div>
+          <Link to="/privacy" className="text-[11px] text-zinc-400 hover:text-brand-400 transition-colors underline">
+            Privacy & Cookie Policy
+          </Link>
         </div>
 
         {/* Back Link */}

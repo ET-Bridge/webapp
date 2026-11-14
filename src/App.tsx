@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import { LandingPage } from './pages/LandingPage'
 import { LoginPage } from './pages/LoginPage'
 import { DocsPage } from './pages/DocsPage'
+import { PrivacyPage } from './pages/PrivacyPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { AttendancePage } from './pages/AttendancePage'
 import { TimetablePage } from './pages/TimetablePage'
@@ -99,6 +100,7 @@ export const App: React.FC = () => {
               <Route path="/" element={<SmartRoot />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/docs" element={<DocsPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
 
               {/* Protected Application Routes */}
               <Route
