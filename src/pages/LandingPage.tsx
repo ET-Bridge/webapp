@@ -350,8 +350,8 @@ export const LandingPage: React.FC = () => {
 
         {/* Document Footer */}
         <footer className="pt-8 border-t border-zinc-800 dark:border-zinc-800 light:border-slate-200 space-y-4 text-xs font-mono">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-500 dark:text-zinc-500 light:text-slate-400">
-            <div>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-zinc-500 dark:text-zinc-500 light:text-slate-400">
+            <div className="text-center sm:text-left">
               Made with love by{' '}
               <a
                 href="https://nimd.me"
@@ -361,24 +361,22 @@ export const LandingPage: React.FC = () => {
               >
                 NiMD
               </a>
-              . Licensed under MIT.
+              {' '}• Licensed under MIT
             </div>
 
-            <div className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center text-zinc-400">
+            <nav aria-label="Footer Navigation" className="flex items-center gap-x-4 gap-y-2 flex-wrap justify-center sm:justify-end text-zinc-400">
               <Link
                 to="/docs"
                 className="text-brand-400 hover:text-brand-300 font-bold transition-colors"
               >
                 Documentation
               </Link>
-              <span className="text-zinc-700 dark:text-zinc-700 light:text-slate-300">•</span>
               <Link
                 to="/privacy"
                 className="hover:text-white dark:hover:text-white light:hover:text-slate-900 transition-colors"
               >
                 Privacy & Cookies
               </Link>
-              <span className="text-zinc-700 dark:text-zinc-700 light:text-slate-300">•</span>
               <button
                 type="button"
                 onClick={handleDemoClick}
@@ -386,7 +384,13 @@ export const LandingPage: React.FC = () => {
               >
                 Demo
               </button>
-              <span className="text-zinc-700 dark:text-zinc-700 light:text-slate-300">•</span>
+              <button
+                type="button"
+                onClick={() => openInstallModal()}
+                className="hover:text-white dark:hover:text-white light:hover:text-slate-900 transition-colors"
+              >
+                Install
+              </button>
               <a
                 href="https://github.com/nimdme/et-bridge"
                 target="_blank"
@@ -396,15 +400,7 @@ export const LandingPage: React.FC = () => {
                 <span>GitHub</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
-              <span className="text-zinc-700 dark:text-zinc-700 light:text-slate-300">•</span>
-              <button
-                type="button"
-                onClick={() => openInstallModal()}
-                className="hover:text-white dark:hover:text-white light:hover:text-slate-900 transition-colors"
-              >
-                Install
-              </button>
-            </div>
+            </nav>
           </div>
 
           {/* Legal Disclaimer */}
