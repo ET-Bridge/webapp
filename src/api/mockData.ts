@@ -103,7 +103,7 @@ export const DEMO_PROFILE: StudentProfile = {
       subject_type: 'Theory',
       subject: 'Management of Software Systems',
       subject_code: 'CST307',
-      teacher_name: 'Dr. Radhika P.',
+      teacher_name: 'Dr. Revathi Pillai',
       attendance_status: 'not_marked'
     }
   ],
@@ -186,7 +186,7 @@ export const DEMO_ATTENDANCE: SubjectAttendance[] = [
     code: 'CST307',
     display_code: 'CST307',
     subject_type: 'Theory',
-    teacher_name: 'Dr. Radhika P.',
+    teacher_name: 'Dr. Revathi Pillai',
     class_attended: 20,
     total_classes: 28,
     percentage: 71.43,
@@ -340,7 +340,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 4,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software development lifecycles: Agile vs Waterfall paradigms"
@@ -442,7 +442,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 1,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Requirement engineering: elicitation and feasibility study"
@@ -555,7 +555,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 6,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Software Requirements Specification (SRS) IEEE 830 standards"
@@ -591,7 +591,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 3,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "COCOMO basic and intermediate software cost estimation models"
@@ -654,7 +654,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 4,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Function Point (FP) metric computation and complexity weights"
@@ -756,7 +756,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 1,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software project planning: WBS, Gantt charts and critical path method"
@@ -869,7 +869,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 6,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Risk management: Identification, projection and mitigation strategies"
@@ -905,7 +905,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 3,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software design concepts: High cohesion and low coupling architectures"
@@ -968,7 +968,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 4,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Object-Oriented Design with UML class and sequence diagrams"
@@ -1070,7 +1070,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 1,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Software testing fundamentals: Verification vs Validation"
@@ -1183,7 +1183,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 6,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "White-box testing: Basis path testing and cyclomatic complexity"
@@ -1219,7 +1219,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 3,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Black-box testing: Equivalence partitioning and boundary value analysis"
@@ -1282,7 +1282,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 4,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software maintenance and configuration management tools (Git)"
@@ -1384,7 +1384,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 1,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software quality assurance: ISO 9001 and CMMI level certifications"
@@ -1497,7 +1497,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 6,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "DevOps pipelines and continuous integration/deployment (CI/CD)"
@@ -1539,7 +1539,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
         "subject_type": "Theory",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software product management and agile sprint retrospectives"
@@ -1604,7 +1604,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 4,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software development lifecycles: Agile vs Waterfall paradigms"
@@ -1706,7 +1706,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 1,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Requirement engineering: elicitation and feasibility study"
@@ -1819,7 +1819,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 6,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Software Requirements Specification (SRS) IEEE 830 standards"
@@ -1855,7 +1855,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 3,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "COCOMO basic and intermediate software cost estimation models"
@@ -1918,7 +1918,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 4,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Function Point (FP) metric computation and complexity weights"
@@ -2020,7 +2020,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 1,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software project planning: WBS, Gantt charts and critical path method"
@@ -2136,7 +2136,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 6,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Risk management: Identification, projection and mitigation strategies"
@@ -2175,7 +2175,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 3,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software design concepts: High cohesion and low coupling architectures"
@@ -2238,7 +2238,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 4,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Object-Oriented Design with UML class and sequence diagrams"
@@ -2340,7 +2340,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 1,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Software testing fundamentals: Verification vs Validation"
@@ -2453,7 +2453,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 6,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "White-box testing: Basis path testing and cyclomatic complexity"
@@ -2489,7 +2489,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 3,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "Black-box testing: Equivalence partitioning and boundary value analysis"
@@ -2552,7 +2552,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 4,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software maintenance and configuration management tools (Git)"
@@ -2654,7 +2654,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 1,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software quality assurance: ISO 9001 and CMMI level certifications"
@@ -2767,7 +2767,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "hour": 6,
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "present",
         "covered_topics": [
           "DevOps pipelines and continuous integration/deployment (CI/CD)"
@@ -2809,7 +2809,7 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
         "subject": "Management of Software Systems",
         "subject_code": "CST307",
         "subject_type": "Theory",
-        "teacher_name": "Dr. Radhika P.",
+        "teacher_name": "Dr. Revathi Pillai",
         "attendance_status": "absent",
         "covered_topics": [
           "Software product management and agile sprint retrospectives"
@@ -2840,23 +2840,23 @@ export const DEMO_MONTH_TIMETABLE: DayTimetable[] = [
 export const DEMO_TEACHERS: Teacher[] = [
   {
     id: 1,
-    name: 'Mrs. Akhila M.',
+    name: 'Dr. Meera Krishnan',
     subject: 'Department of Computer Science',
     role_label: 'Head of Department',
     is_hod: true,
     photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-    email: 'akhilam@engg.edu.in',
-    phone: '+91 94978 28473'
+    email: 'meera.k@engg.edu.in',
+    phone: '+91 90000 10001'
   },
   {
     id: 2,
-    name: 'Prof. Shibili T.',
+    name: 'Prof. Rahul Menon',
     subject: 'Computer Science & Engineering',
     role_label: 'Staff Advisor',
     is_staff_advisor: true,
     photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    email: 'shibili.t@engg.edu.in',
-    phone: '+91 98478 41673'
+    email: 'rahul.menon@engg.edu.in',
+    phone: '+91 90000 10002'
   },
   {
     id: 3,
@@ -2887,11 +2887,11 @@ export const DEMO_TEACHERS: Teacher[] = [
   },
   {
     id: 6,
-    name: 'Dr. Radhika P.',
+    name: 'Dr. Revathi Pillai',
     subject: 'Management of Software Systems (CST307)',
     role_label: 'Faculty',
     photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
-    email: 'radhika.p@engg.edu.in',
+    email: 'revathi.p@engg.edu.in',
     phone: '+91 94964 56789'
   }
 ]
@@ -3020,7 +3020,7 @@ export const DEMO_COURSES: Course[] = [
     type: 'Theory',
     slot: 'B',
     hours: 3,
-    teacher_name: 'SNEHA K V',
+    teacher_name: 'Dr. Lakshmi Varma',
     atten_text: '10 / 10',
     atten_per: '100.00'
   },
@@ -3032,7 +3032,7 @@ export const DEMO_COURSES: Course[] = [
     type: 'No University Exam. Internal Only (Theory)',
     slot: 'B',
     hours: 5,
-    teacher_name: 'MUMTHAS THAZHATHKOYILOTH',
+    teacher_name: 'Prof. Farhan Ali',
     atten_text: '21 / 23',
     atten_per: '91.30'
   },
@@ -3044,7 +3044,7 @@ export const DEMO_COURSES: Course[] = [
     type: 'No University Exam. Internal Only (Practical)',
     slot: 'B',
     hours: 5,
-    teacher_name: 'MUMTHAS THAZHATHKOYILOTH',
+    teacher_name: 'Prof. Farhan Ali',
     atten_text: '10 / 10',
     atten_per: '100.00'
   },
@@ -3056,7 +3056,7 @@ export const DEMO_COURSES: Course[] = [
     type: 'Theory',
     slot: 'C',
     hours: 4,
-    teacher_name: 'ARJUN SREEDHAR S',
+    teacher_name: 'Prof. Nikhil Das',
     atten_text: '23 / 35',
     atten_per: '65.71'
   },
@@ -3068,7 +3068,7 @@ export const DEMO_COURSES: Course[] = [
     type: 'Theory',
     slot: 'D',
     hours: 4,
-    teacher_name: 'AISHWARYADASS K, DANYA. V. P',
+    teacher_name: 'Dr. Kavya Iyer, Prof. Deepa Thomas',
     atten_text: '23 / 32',
     atten_per: '71.88'
   },
@@ -3080,7 +3080,7 @@ export const DEMO_COURSES: Course[] = [
     type: 'Theory',
     slot: 'A',
     hours: 3,
-    teacher_name: 'RADHIKA KALIYARTHODI',
+    teacher_name: 'Dr. Priya Raman',
     atten_text: '23 / 30',
     atten_per: '76.67'
   },
@@ -3092,7 +3092,7 @@ export const DEMO_COURSES: Course[] = [
     type: 'Practical',
     slot: 'P',
     hours: 2,
-    teacher_name: 'AISHWARYADASS K, DANYA. V. P, VIPIN NATH S',
+    teacher_name: 'Dr. Kavya Iyer, Prof. Deepa Thomas, Prof. Joel Mathew',
     atten_text: '24 / 30',
     atten_per: '80.00'
   },
@@ -3104,7 +3104,7 @@ export const DEMO_COURSES: Course[] = [
     type: 'No University Exam. Internal Only (Theory)',
     slot: 'E',
     hours: 3,
-    teacher_name: 'ANASWARA N.G.',
+    teacher_name: 'Prof. Sana Pillai',
     atten_text: '17 / 20',
     atten_per: '85.00'
   }
@@ -3147,7 +3147,7 @@ export const DEMO_COURSE_DETAILS: Record<string | number, CourseDetails> = {
 }
 
 export const DEMO_ACADEMIC_ANALYSIS: AcademicAnalysis = {
-  name: 'NIRANJAN M D',
+  name: 'ARJUN K V',
   cgpa: 0,
   earned_credit: 0,
   total_credit: 20,
@@ -3155,8 +3155,8 @@ export const DEMO_ACADEMIC_ANALYSIS: AcademicAnalysis = {
   total_passed: 0,
   total_exams: 7,
   student: {
-    name: 'NIRANJAN M D',
-    admissionNo: '26B323',
+    name: 'ARJUN K V',
+    admissionNo: 'KTU22CS045',
     batch: '2K26',
     current_sem: 1,
     cgpa: 0,

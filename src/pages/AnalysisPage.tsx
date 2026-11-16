@@ -18,8 +18,8 @@ import { Link } from 'react-router-dom'
 export const AnalysisPage: React.FC = () => {
   const { academicAnalysis, profile, attendance } = useAuth()
 
-  const studentName = academicAnalysis?.name || profile?.name || 'NIRANJAN M D'
-  const admissionNo = academicAnalysis?.student?.admissionNo || profile?.admission_no || '26B323'
+  const studentName = academicAnalysis?.name || profile?.name || 'Student'
+  const admissionNo = academicAnalysis?.student?.admissionNo || profile?.admission_no || '—'
   const batch = academicAnalysis?.student?.batch || '2K26'
   const currentSem = formatSemester(academicAnalysis?.student?.current_sem || profile?.curnt_sem, 'Semester')
 
