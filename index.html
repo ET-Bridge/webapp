@@ -21,7 +21,7 @@
 
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="ETBridge — Clean ETLab Client" />
+    <meta property="og:site_name" content="ETBridge" />
     <meta property="og:url" content="https://etbridge.nimd.me" />
     <meta property="og:title" content="ETBridge — ETLab Student Portal, Login & Attendance Calculator" />
     <meta property="og:description" content="ETBridge is a blazing fast, privacy-first, zero-backend student client for ETLab. Check 75% bunk margins, timetables, internal marks, and track self-reported duty leaves." />
@@ -42,11 +42,17 @@
     <meta name="twitter:image:alt" content="ETBridge Logo" />
     <meta name="twitter:creator" content="@nimdme" />
 
-    <!-- JSON-LD Structured Data Schema (WebApplication & FAQPage) -->
+    <!-- JSON-LD Structured Data Schema (WebSite, WebApplication & FAQPage) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "ETBridge",
+            "alternateName": ["ET Bridge", "ETBridge ETLab Client"],
+            "url": "https://etbridge.nimd.me/"
+          },
           {
             "@type": "WebApplication",
             "name": "ETBridge",
