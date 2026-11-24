@@ -122,20 +122,42 @@ export const AttendancePage: React.FC = () => {
     return allTimetableEntries.filter((d: DayTimetable) => d.date?.startsWith(monthKey))
   }, [allTimetableEntries, monthKey])
 
-  // Calculate monthly attendance stats
+  // Load the viewed month on demand (the semester prefetch only covers recent months).
+  const [loadingMonth, setLoadingMonth] = useState(false)
+  useEffect(() => {
+    if (allTimetableEntries.some(d => d.date?.startsWith(monthKey))) {
+      setLoadingMonth(false)
+      return
+    }
+    let cancelled = false
+    setLoadingMonth(true)
+    etlabClient.getMonthlyTimetable(monthKey).then(data => {
+      if (cancelled || !Array.isArray(data) || data.length === 0) return
+      setSemesterTimetable(prev => {
+        const map = new Map<string, DayTimetable>()
+        ;(prev || []).forEach((d: DayTimetable) => { if (d.date) map.set(d.date, d) })
+        data.forEach(d => { if (d.date) map.set(d.date, d) })
+        return Array.from(map.values())
+      })
+    }).catch(console.warn).finally(() => { if (!cancelled) setLoadingMonth(false) })
+    return () => { cancelled = true; setLoadingMonth(false) }
+  }, [monthKey, allTimetableEntries])
+
+  // Calculate monthly attendance stats (marked hours only, as ETLab's monthly summary does)
   let monthPresent = 0
   let monthAbsent = 0
-  let monthTotal = 0
+  let monthDutyLeave = 0
 
   monthDays.forEach((d: DayTimetable) => {
     d.sub?.forEach((p: TimetablePeriod) => {
-      monthTotal++
       if (p.attendance_status === 'present') monthPresent++
       else if (p.attendance_status === 'absent') monthAbsent++
+      else if (p.attendance_status === 'duty_leave') monthDutyLeave++
     })
   })
 
-  const monthPercentage = monthTotal > 0 ? Math.round((monthPresent / monthTotal) * 100) : 94
+  const monthTotal = monthPresent + monthAbsent + monthDutyLeave
+  const monthPercentage = monthTotal > 0 ? Math.round(((monthPresent + monthDutyLeave) / monthTotal) * 100) : null
 
   // Get days in current month
   const year = currentDate.getFullYear()
@@ -143,63 +165,21 @@ export const AttendancePage: React.FC = () => {
   const firstDayIndex = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
 
-  // Selected Day Timetable resolved dynamically per selected date
+  // Selected day: only ever show what ETLab has for that exact date. (Borrowing another
+  // week's periods for the same weekday showed subjects that were never taught that day.)
   const selectedDayEntry = useMemo(() => {
     if (!selectedDayDate) return null
-
-    // 1. Direct date match in all combined timetable entries
     const exact = allTimetableEntries.find((d: DayTimetable) => d.date === selectedDayDate)
-    if (exact && Array.isArray(exact.sub) && exact.sub.length > 0) {
-      return exact
-    }
-
-    // 2. Day-of-week match
+    if (exact) return exact
     const parts = selectedDayDate.split('-').map(Number)
     const dateObj = new Date(parts[0], parts[1] - 1, parts[2])
-    const dayName = dateObj.toLocaleDateString('en-IN', { weekday: 'long' })
-    const isSunday = dateObj.getDay() === 0
-
-    if (isSunday) {
-      return {
-        date: selectedDayDate,
-        day: 'Sunday',
-        is_holiday: true,
-        holiday_reason: 'Sunday - Weekly Off',
-        sub: []
-      }
-    }
-
-    // Lookup day of week schedule from timetable entries
-    const byDayName = allTimetableEntries.find((d: DayTimetable) => d.day?.toLowerCase() === dayName.toLowerCase() && Array.isArray(d.sub) && d.sub.length > 0)
-    if (byDayName && Array.isArray(byDayName.sub)) {
-      return {
-        date: selectedDayDate,
-        day: dayName,
-        sub: byDayName.sub.map((p: any) => ({
-          ...p,
-          attendance_status: p.attendance_status || 'scheduled'
-        }))
-      }
-    }
-
-    // 3. Fallback to profile regular timetable
-    if (profile?.timetable && profile.timetable.length > 0) {
-      return {
-        date: selectedDayDate,
-        day: dayName,
-        sub: profile.timetable.map((p: any) => ({
-          ...p,
-          attendance_status: 'scheduled'
-        }))
-      }
-    }
-
     return {
       date: selectedDayDate,
-      day: dayName,
+      day: dateObj.toLocaleDateString('en-IN', { weekday: 'long' }),
+      holiday_name: dateObj.getDay() === 0 ? 'Sunday — weekly off' : undefined,
       sub: []
-    }
-  }, [selectedDayDate, allTimetableEntries, profile])
+    } as DayTimetable
+  }, [selectedDayDate, allTimetableEntries])
 
   const activePeriods: TimetablePeriod[] = (selectedDayEntry?.sub as TimetablePeriod[]) || []
   const selectedDayPresentCount = activePeriods.filter(p => p.attendance_status === 'present').length
@@ -578,27 +558,29 @@ export const AttendancePage: React.FC = () => {
               <div>
                 <span className="text-[11px] font-bold uppercase text-brand-400">Monthly Summary</span>
                 <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className="text-2xl font-black text-white dark:text-white light:text-slate-900">{monthPercentage}%</span>
-                  <span className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-600">counted attendance</span>
+                  <span className="text-2xl font-black text-white dark:text-white light:text-slate-900">{monthPercentage === null ? '—' : `${monthPercentage}%`}</span>
+                  <span className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-600">
+                    {loadingMonth ? 'loading…' : monthPercentage === null ? 'no attendance marked' : 'counted attendance'}
+                  </span>
                 </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
                 <div>
                   <span className="text-zinc-500 dark:text-zinc-500 light:text-slate-400 block text-[10px]">Present</span>
-                  <span className="text-emerald-400 font-bold text-sm">{monthPresent || 87}</span>
+                  <span className="text-emerald-400 font-bold text-sm">{monthPresent}</span>
                 </div>
                 <div>
                   <span className="text-zinc-500 dark:text-zinc-500 light:text-slate-400 block text-[10px]">Absent</span>
-                  <span className="text-rose-400 font-bold text-sm">{monthAbsent || 6}</span>
+                  <span className="text-rose-400 font-bold text-sm">{monthAbsent}</span>
                 </div>
                 <div>
                   <span className="text-zinc-500 dark:text-zinc-500 light:text-slate-400 block text-[10px]">Regular Hours</span>
-                  <span className="text-zinc-200 dark:text-zinc-200 light:text-slate-800 font-bold text-sm">{monthTotal || 93}</span>
+                  <span className="text-zinc-200 dark:text-zinc-200 light:text-slate-800 font-bold text-sm">{monthTotal}</span>
                 </div>
                 <div>
                   <span className="text-zinc-500 dark:text-zinc-500 light:text-slate-400 block text-[10px]">Duty Leave</span>
-                  <span className="text-brand-400 font-bold text-sm">0</span>
+                  <span className="text-brand-400 font-bold text-sm">{monthDutyLeave}</span>
                 </div>
               </div>
             </div>
@@ -656,8 +638,8 @@ export const AttendancePage: React.FC = () => {
                   // Determine status dot
                   let dotColor = ''
                   if (isFuture) {
-                    // Future dates: indicate scheduled classes with neutral gray dot
-                    if (!isWeekend) {
+                    // Future dates: grey dot only when ETLab has classes scheduled that day
+                    if (dayData?.sub?.some(p => !p.suspended)) {
                       dotColor = 'bg-zinc-500 dark:bg-zinc-500 light:bg-slate-400'
                     }
                   } else if (dayData && dayData.sub && dayData.sub.length > 0) {
@@ -675,9 +657,6 @@ export const AttendancePage: React.FC = () => {
                     } else {
                       dotColor = 'bg-rose-500'
                     }
-                  } else if (dayNum === 1 && !isWeekend) {
-                    // Demo fallback for Oct 1
-                    dotColor = 'bg-amber-500'
                   }
 
                   return (
@@ -733,7 +712,7 @@ export const AttendancePage: React.FC = () => {
                       </>
                     ) : (
                       <span className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-500 font-medium">
-                        {(selectedDayEntry as any)?.holiday_reason || 'No classes recorded for this date'}
+                        {selectedDayEntry?.holiday_name || 'No classes recorded for this date'}
                       </span>
                     )}
                   </div>
@@ -815,7 +794,7 @@ export const AttendancePage: React.FC = () => {
                   <div className="py-12 text-center text-zinc-500">
                     <CalendarIcon className="w-8 h-8 mx-auto mb-2 opacity-40 text-brand-400" />
                     <p className="text-sm font-semibold text-zinc-300 dark:text-zinc-300 light:text-slate-700">
-                      {(selectedDayEntry as any)?.holiday_reason || 'No classes recorded for this date'}
+                      {selectedDayEntry?.holiday_name || 'No classes recorded for this date'}
                     </p>
                     <p className="text-xs text-zinc-500 mt-1">
                       Weekly off, holiday, or no session entries in ETLab.

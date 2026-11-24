@@ -207,7 +207,7 @@ export const DocsPage: React.FC = () => {
                                         | Direct HTTPS (Zero Proxy)
                                         v
 +-----------------------------------------------------------------------+
-| ETLab Public API Server (https://api.students.etlab.app/api/v1)       |
+| ETLab Public API Server (https://api2.students.etlab.app/api/v1)       |
 | College Tenants (gcek.etlab.app, mace.etlab.app, tkmce.etlab.app...)  |
 +-----------------------------------------------------------------------+`}</pre>
                 </div>
@@ -215,7 +215,7 @@ export const DocsPage: React.FC = () => {
                 <ul className="list-disc pl-5 space-y-1.5 text-zinc-400 dark:text-zinc-400 light:text-slate-600">
                   <li><strong>Security & Privacy:</strong> Student credentials and Bearer tokens never touch third-party servers or databases. All requests flow directly to ETLab's official infrastructure.</li>
                   <li><strong>Hosting Simplicity:</strong> The entire application compiles into static HTML, CSS, and JavaScript, deployable on Cloudflare Pages or any static edge CDN with zero maintenance overhead.</li>
-                  <li><strong>Edge CORS Proxying:</strong> While local development uses Vite's local dev server proxy, production deployments on Cloudflare Pages route through a lightweight serverless edge function (`/functions/api/[[path]].js`) that transparently relays calls to `api.students.etlab.app` with standard CORS headers, avoiding webview restrictions across any custom domain.</li>
+                  <li><strong>Edge CORS Proxying:</strong> While local development uses Vite's local dev server proxy, production deployments on Cloudflare Pages route through a lightweight serverless edge function (`/functions/api/[[path]].js`) that transparently relays calls to `api2.students.etlab.app` with standard CORS headers, avoiding webview restrictions across any custom domain.</li>
                 </ul>
               </div>
             </section>
@@ -236,7 +236,7 @@ export const DocsPage: React.FC = () => {
 
                 <div className="relative p-4 rounded-2xl bg-zinc-900/90 dark:bg-zinc-900/90 light:bg-slate-900 border border-zinc-800 font-mono text-xs">
                   <button
-                    onClick={() => copyToClipboard(`POST https://api.students.etlab.app/api/v1/login
+                    onClick={() => copyToClipboard(`POST https://api2.students.etlab.app/api/v1/login
 Content-Type: application/json
 
 {
@@ -249,7 +249,7 @@ Content-Type: application/json
                   >
                     {copiedSnippet === 'auth-curl' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
-                  <pre className="text-zinc-300 overflow-x-auto">{`POST https://api.students.etlab.app/api/v1/login
+                  <pre className="text-zinc-300 overflow-x-auto">{`POST https://api2.students.etlab.app/api/v1/login
 Content-Type: application/json
 
 {
@@ -296,7 +296,7 @@ Content-Type: application/json
               </div>
 
               <p className="text-xs sm:text-sm text-zinc-300 dark:text-zinc-300 light:text-slate-700 leading-relaxed">
-                The primary base URL for ETLab student mobile clients is <code className="font-mono text-xs bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 px-1.5 py-0.5 rounded">https://api.students.etlab.app/api/v1</code>.
+                The primary base URL for ETLab student mobile clients is <code className="font-mono text-xs bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 px-1.5 py-0.5 rounded">https://api2.students.etlab.app/api/v1</code>.
               </p>
 
               <div className="space-y-3 font-mono text-xs">
@@ -314,7 +314,12 @@ Content-Type: application/json
                   {
                     method: 'GET',
                     endpoint: '/timetablenew?month=YYYY-MM',
-                    desc: 'Returns daily schedule for the specified month. Each day contains an array of 6 periods with hour index, subject code, instructor name, covered syllabus topics, and attendance status (present, absent, duty_leave, not_marked).'
+                    desc: 'Returns the scheduled timetable for the month: each day has periods with hour index, subject code, instructor, substitution/suspension info and topics. Note: this is the planned schedule — "Minor" slots, lab blocks and swapped hours show the scheduled subject, and many marked hours come back as "N/A".'
+                  },
+                  {
+                    method: 'POST',
+                    endpoint: '/attendancebyday  {"month": M, "year": YYYY}',
+                    desc: 'What ETLab\'s own calendar uses. days["YYYY-MM-DD"] lists every marked hour with the subject actually taught (sub, subject_code), status (Present / Absent / Duty Leave / On Duty), counts_as_present and covered topics, plus monthly_summary and semester_summary. ETBridge overlays these records onto /timetablenew so the calendar, subject history and duty-leave matching use the real subject.'
                   },
                   {
                     method: 'GET',
@@ -471,8 +476,8 @@ y = ceil( (0.75 * T - A) / 0.25 )`}</pre>
                     <p className="text-[11px] text-zinc-400 font-sans mt-0.5">Cached subject attendance objects and targets.</p>
                   </div>
                   <div className="p-3 rounded-xl bg-zinc-900/60 border border-zinc-800">
-                    <span className="text-brand-400 font-bold">etbridge_cached_timetable_YYYY-MM</span>
-                    <p className="text-[11px] text-zinc-400 font-sans mt-0.5">Partitioned monthly timetable periods and teacher logs.</p>
+                    <span className="text-brand-400 font-bold">etbridge_cached_timetable_v2_YYYY-MM</span>
+                    <p className="text-[11px] text-zinc-400 font-sans mt-0.5">Monthly timetable with ETLab's attendance records merged in (actual subject and mark per hour).</p>
                   </div>
                   <div className="p-3 rounded-xl bg-zinc-900/60 border border-zinc-800">
                     <span className="text-brand-400 font-bold">etbridge_last_sync_time</span>
@@ -528,7 +533,7 @@ y = ceil( (0.75 * T - A) / 0.25 )`}</pre>
                   <div className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 space-y-2">
                     <span className="text-brand-400 font-bold">Step 3: Fetch Data with Authorization Header</span>
                     <p className="font-sans text-zinc-400 text-xs">
-                      Attach <code className="text-white">Authorization: Bearer &lt;token&gt;</code> to every request. Query <code className="text-white">/attendancebysubject</code> for attendance and <code className="text-white">/timetablenew?month=YYYY-MM</code> for schedules.
+                      Attach <code className="text-white">Authorization: Bearer &lt;token&gt;</code> to every request. Query <code className="text-white">/attendancebysubject</code> for attendance <code className="text-white">/timetablenew?month=YYYY-MM</code> for schedules, and <code className="text-white">POST /attendancebyday</code> for what was actually marked each hour. Tokens are JWTs valid for 3 days; ETLab returns a fresher one in the <code className="text-white">X-Session-Token</code> response header, which clients should adopt.
                     </p>
                   </div>
 

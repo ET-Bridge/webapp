@@ -242,7 +242,7 @@ export const PrivacyPage: React.FC = () => {
               </h2>
               <div className="text-xs sm:text-sm text-zinc-300 dark:text-zinc-300 light:text-slate-700 leading-relaxed space-y-3 font-sans">
                 <p>
-                  <strong>3.1 Direct Client-to-API Communication:</strong> Network queries dispatched by the Application communicate directly between the user&apos;s device and the official ETLab production server (<code className="text-xs font-mono text-brand-400">api.students.etlab.app</code>). No intermediate third-party application servers intercept or record user credentials.
+                  <strong>3.1 Direct Client-to-API Communication:</strong> Network queries dispatched by the Application communicate directly between the user&apos;s device and the official ETLab production server (<code className="text-xs font-mono text-brand-400">api2.students.etlab.app</code>). No intermediate third-party application servers intercept or record user credentials.
                 </p>
                 <p>
                   <strong>3.2 In-Transit Cryptographic Protection:</strong> All external API requests are encrypted in transit using industry-standard Transport Layer Security (TLS 1.2 / TLS 1.3).

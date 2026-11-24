@@ -24,6 +24,7 @@ import {
   FileCheck,
   AlertCircle
 } from 'lucide-react'
+import { etlabUrl } from '../api/endpoints'
 
 export const AcademicsPage: React.FC = () => {
   const { evaluations, teachers, materials, universityResults, profile } = useAuth()
@@ -406,7 +407,7 @@ export const AcademicsPage: React.FC = () => {
                 const isSubmitted = asg.status?.toUpperCase() === 'SUBMITTED'
                 const isMissed = !isSubmitted && daysInfo.isOverdue
                 const downloadUrl = asg.url ? (
-                  asg.url.startsWith('http') ? asg.url : `https://api.students.etlab.app${asg.url}`
+                  asg.url.startsWith('http') ? asg.url : etlabUrl(asg.url)
                 ) : null
 
                 return (

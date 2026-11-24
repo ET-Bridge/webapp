@@ -28,7 +28,7 @@ const FAQ_ITEMS: FAQItem[] = [
   },
   {
     question: 'Is my password or student data stored on any server?',
-    answer: 'No. ETBridge is a 100% static client-side application. There are no intermediate servers, databases, or tracking proxies. All API requests go directly from your browser to ETLab\'s official API (api.students.etlab.app), and your authentication token is kept only in your browser\'s local storage.'
+    answer: 'No. ETBridge is a 100% static client-side application. There are no intermediate servers, databases, or tracking proxies. All API requests go directly from your browser to ETLab\'s official API (api2.students.etlab.app), and your authentication token is kept only in your browser\'s local storage.'
   },
   {
     question: 'How does the 75% bunk calculation work?',
@@ -266,7 +266,7 @@ export const LandingPage: React.FC = () => {
           <div className="p-4 rounded-xl border border-zinc-800 dark:border-zinc-800 light:border-slate-200 bg-zinc-900/50 dark:bg-zinc-900/50 light:bg-white space-y-2 text-xs sm:text-sm text-zinc-300 dark:text-zinc-300 light:text-slate-700">
             <ul className="list-disc pl-5 space-y-1.5 leading-relaxed text-zinc-400 dark:text-zinc-400 light:text-slate-600">
               <li>
-                <strong className="text-zinc-200 dark:text-zinc-200 light:text-slate-800">Direct Client-to-API Communication:</strong> All login requests and data fetches travel directly from your browser to ETLab's official REST API endpoint (<code className="font-mono text-xs bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 px-1 py-0.5 rounded">https://api.students.etlab.app</code>).
+                <strong className="text-zinc-200 dark:text-zinc-200 light:text-slate-800">Direct Client-to-API Communication:</strong> All login requests and data fetches travel directly from your browser to ETLab's official REST API endpoint (<code className="font-mono text-xs bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 px-1 py-0.5 rounded">https://api2.students.etlab.app</code>).
               </li>
               <li>
                 <strong className="text-zinc-200 dark:text-zinc-200 light:text-slate-800">No Intermediary Backend Servers:</strong> There is no proxy server, middleman database, or developer backend recording credentials.

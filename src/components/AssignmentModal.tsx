@@ -17,6 +17,7 @@ import {
   ExternalLink,
   ShieldAlert
 } from 'lucide-react'
+import { etlabUrl } from '../api/endpoints'
 
 interface AssignmentModalProps {
   assignment: Assignment | null
@@ -38,7 +39,7 @@ export const AssignmentModal: React.FC<AssignmentModalProps> = ({ assignment, on
   const isSubmitted = assignment.status?.toUpperCase() === 'SUBMITTED'
   const isMissed = !isSubmitted && daysInfo.isOverdue
   const downloadUrl = assignment.url ? (
-    assignment.url.startsWith('http') ? assignment.url : `https://api.students.etlab.app${assignment.url}`
+    assignment.url.startsWith('http') ? assignment.url : etlabUrl(assignment.url)
   ) : null
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

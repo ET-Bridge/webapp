@@ -35,6 +35,20 @@ import {
   DEMO_ACADEMIC_ANALYSIS
 } from './mockData'
 import { parsePercent, parseNumber } from '../utils/format'
+import {
+  DEFAULT_ETLAB_API_ORIGIN,
+  UPSTREAM_HEADER,
+  EtlabUnavailableError,
+  SessionExpiredError,
+  emitEtlabStatus,
+  etlabUrl,
+  getApiOrigin,
+  isOutageResponse,
+  normalizeApiOrigin,
+  setApiOrigin,
+  shouldAcceptRotatedToken
+} from './endpoints'
+import { AttendanceRecord, mergeAttendanceIntoTimetable } from './attendanceMerge'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1'
 
@@ -159,6 +173,7 @@ class EtlabApiClient {
       if (saved) {
         this.session = JSON.parse(saved)
         this.isDemoMode = this.session?.token === 'demo-token'
+        setApiOrigin(this.session?.apiOrigin)
         return this.session
       }
     } catch (e) {
@@ -170,6 +185,7 @@ class EtlabApiClient {
   public setSession(session: AuthSession | null) {
     this.session = session
     this.isDemoMode = session?.token === 'demo-token'
+    setApiOrigin(session?.apiOrigin)
     if (session) {
       localStorage.setItem('etbridge_session', JSON.stringify(session))
     } else {
@@ -202,6 +218,55 @@ class EtlabApiClient {
     return demoSession
   }
 
+  /**
+   * Every ETLab request goes through here. It
+   * - routes to an institute-specific ETLab origin via our proxy when one is configured,
+   * - adopts the fresher token ETLab sends in `X-Session-Token` (tokens expire after 3 days),
+   * - turns outages (Render/Cloudflare 5xx pages) and expired sessions into clear errors and
+   *   broadcasts them so the UI can show a banner.
+   * Callers keep their own stale-cache fallbacks, so errors thrown here never wipe data.
+   */
+  private async apiFetch(input: string, init: RequestInit = {}): Promise<Response> {
+    const headers = new Headers(init.headers)
+    const origin = getApiOrigin()
+    if (origin !== DEFAULT_ETLAB_API_ORIGIN) headers.set(UPSTREAM_HEADER, origin)
+    const authHeader = headers.get('Authorization') || ''
+    const sentToken = authHeader.replace(/^Bearer\s+/i, '').trim() || undefined
+
+    let res: Response
+    try {
+      res = await fetch(input, { ...init, headers })
+    } catch (err) {
+      throw new Error("Couldn't reach ETLab. Check your internet connection and try again.")
+    }
+
+    if (isOutageResponse(res)) {
+      emitEtlabStatus('unavailable')
+      throw new EtlabUnavailableError(res.status)
+    }
+
+    const rotated = res.headers.get('X-Session-Token')?.trim()
+    if (rotated && sentToken && this.session && this.session.token === sentToken &&
+        shouldAcceptRotatedToken(rotated, sentToken)) {
+      this.setSession({ ...this.session, token: rotated })
+    }
+
+    if (res.status === 401 && sentToken && !this.isDemoMode) {
+      emitEtlabStatus('session_expired')
+      throw new SessionExpiredError()
+    }
+
+    if (res.ok) emitEtlabStatus('ok')
+    return res
+  }
+
+  /** The institute's ETLab API origin from the cached institute list, if ETLab publishes one. */
+  private resolveInstituteOrigin(instituteId: string): string | undefined {
+    const list = this.getCachedData<Institute[]>('etbridge_cached_institutes', true) || []
+    const match = list.find(i => i.id === instituteId)
+    return normalizeApiOrigin(match?.apiBaseUrl) || undefined
+  }
+
   public getHeaders(): HeadersInit {
     const headers: Record<string, string> = {
       'Accept': 'application/json',
@@ -222,12 +287,13 @@ class EtlabApiClient {
   // --- 1. Institutes ---
   public async getInstitutes(): Promise<Institute[]> {
     try {
-      const res = await fetch(`${API_BASE_URL}/institutes`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/institutes`, {
         cache: 'no-store'
       })
       if (res.ok) {
         const data = await res.json()
         if (Array.isArray(data) && data.length > 0) {
+          this.setCache('etbridge_cached_institutes', data)
           return data
         }
       }
@@ -249,7 +315,11 @@ class EtlabApiClient {
       institute_id: instituteId
     }
 
-    const res = await fetch(`${API_BASE_URL}/login`, {
+    // Log in against the institute's own ETLab origin if ETLab publishes one.
+    const apiOrigin = this.resolveInstituteOrigin(instituteId)
+    setApiOrigin(apiOrigin)
+
+    const res = await this.apiFetch(`${API_BASE_URL}/login`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -281,7 +351,8 @@ class EtlabApiClient {
       instituteName: instituteName || instituteId.toUpperCase(),
       username: username.trim(),
       studentName: data.name || data.student?.name || username,
-      studentPhoto
+      studentPhoto,
+      apiOrigin
     }
 
     this.setSession(session)
@@ -301,7 +372,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/profile`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/profile`, {
         headers: this.getHeaders()
       })
 
@@ -349,7 +420,7 @@ class EtlabApiClient {
       const url = this.getEndpointUrl('/attendancebysubject')
       if (semId) url.searchParams.set('sem_id', String(semId))
 
-      const res = await fetch(url.toString(), {
+      const res = await this.apiFetch(url.toString(), {
         headers: this.getHeaders()
       })
 
@@ -378,7 +449,7 @@ class EtlabApiClient {
     }
   }
 
-  // --- 5. Monthly Timetable ---
+  // --- 5. Monthly Timetable (scheduled timetable + actual attendance records) ---
   public async getMonthlyTimetable(monthStr?: string, forceRefresh = false): Promise<DayTimetable[]> {
     if (this.isDemoMode) {
       return DEMO_MONTH_TIMETABLE
@@ -386,7 +457,8 @@ class EtlabApiClient {
 
     const now = new Date()
     const month = monthStr || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-    const cacheKey = `etbridge_cached_timetable_${month}`
+    // v2: entries now carry ETLab's attendance records merged in (see attendanceMerge.ts).
+    const cacheKey = `etbridge_cached_timetable_v2_${month}`
 
     if (!forceRefresh) {
       const cached = this.getCachedData<DayTimetable[]>(cacheKey)
@@ -394,14 +466,23 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/timetablenew?month=${month}`, {
-        headers: this.getHeaders()
-      })
+      const [year, mon] = month.split('-').map(Number)
+      const [ttRes, attendance] = await Promise.all([
+        this.apiFetch(`${API_BASE_URL}/timetablenew?month=${month}`, { headers: this.getHeaders() }),
+        this.getAttendanceByDay(year, mon)
+      ])
 
-      if (res.ok) {
-        const data = await res.json()
-        const timetable: DayTimetable[] = data.timetable || []
-        this.setCache(cacheKey, timetable)
+      if (ttRes.ok) {
+        const data = await ttRes.json()
+        const scheduled: DayTimetable[] = Array.isArray(data?.timetable) ? data.timetable : []
+        // Without the attendance records we'd show scheduled subjects as if they were the ones
+        // marked, so only cache a merged result.
+        const timetable = attendance ? mergeAttendanceIntoTimetable(scheduled, attendance) : scheduled
+        if (attendance) this.setCache(cacheKey, timetable)
+        else {
+          const stale = this.getCachedData<DayTimetable[]>(cacheKey, true)
+          if (stale) return stale
+        }
         return timetable
       }
     } catch (err) {
@@ -413,13 +494,34 @@ class EtlabApiClient {
     return []
   }
 
+  /**
+   * POST /attendancebyday → { days: { 'YYYY-MM-DD': AttendanceRecord[] }, monthly_summary, … }.
+   * This is what ETLab's own calendar uses: the subject actually taught each marked hour and
+   * how it was marked. Returns null when unavailable.
+   */
+  private async getAttendanceByDay(year: number, month: number): Promise<Record<string, AttendanceRecord[]> | null> {
+    try {
+      const res = await this.apiFetch(`${API_BASE_URL}/attendancebyday`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify({ month, year })
+      })
+      if (!res.ok) return null
+      const data = await res.json()
+      return data?.days && typeof data.days === 'object' && !Array.isArray(data.days) ? data.days : {}
+    } catch (err) {
+      console.warn('Failed to load attendance by day:', err)
+      return null
+    }
+  }
+
   // --- 5b. Semester Timetable (Multi-Month Aggregation) ---
   public async getSemesterTimetable(forceRefresh = false): Promise<DayTimetable[]> {
     if (this.isDemoMode) {
       return DEMO_MONTH_TIMETABLE
     }
 
-    const cacheKey = 'etbridge_cached_semester_timetable'
+    const cacheKey = 'etbridge_cached_semester_timetable_v2'
     if (!forceRefresh) {
       const cached = this.getCachedData<DayTimetable[]>(cacheKey)
       if (cached) return cached
@@ -431,7 +533,8 @@ class EtlabApiClient {
 
     // Fetch current month and preceding months of semester
     const monthsToFetch: string[] = []
-    for (let i = 0; i < 4; i++) {
+    // KTU semesters span ~4.5 months, so five months covers the whole current semester.
+    for (let i = 0; i < 5; i++) {
       let m = currentMonth - i
       let y = currentYear
       if (m <= 0) {
@@ -487,7 +590,7 @@ class EtlabApiClient {
     if (semId) url.searchParams.set('sem_id', String(semId))
 
     try {
-      const res = await fetch(url.toString(), {
+      const res = await this.apiFetch(url.toString(), {
         headers: this.getHeaders()
       })
 
@@ -524,7 +627,7 @@ class EtlabApiClient {
       headers['X-Institute-ID'] = this.session.instituteId
     }
 
-    const res = await fetch(`${API_BASE_URL}/uploadassignment/${assignmentId}`, {
+    const res = await this.apiFetch(`${API_BASE_URL}/uploadassignment/${assignmentId}`, {
       method: 'POST',
       headers,
       body: formData
@@ -541,7 +644,7 @@ class EtlabApiClient {
       return
     }
 
-    const res = await fetch(`${API_BASE_URL}/deleteassignment`, {
+    const res = await this.apiFetch(`${API_BASE_URL}/deleteassignment`, {
       method: 'POST',
       headers: this.getHeaders(),
       body: JSON.stringify({ assignment_id: assignmentId })
@@ -565,7 +668,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/teachers`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/teachers`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
@@ -595,14 +698,14 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/studymaterials`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/studymaterials`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
         const raw: any[] = await res.json()
         const data: StudyMaterial[] = (Array.isArray(raw) ? raw : []).map(m => ({
           ...m,
-          link: m.file_name ? (m.file_name.startsWith('http') ? m.file_name : `https://api.students.etlab.app${m.file_name}`) : '#'
+          link: m.file_name ? (m.file_name.startsWith('http') ? m.file_name : etlabUrl(m.file_name)) : '#'
         }))
         this.setCache(cacheKey, data)
         return data
@@ -629,7 +732,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/fees`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/fees`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
@@ -659,7 +762,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/activitypoints/legacy`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/activitypoints/legacy`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
@@ -689,7 +792,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/dutyleaves`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/dutyleaves`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
@@ -720,7 +823,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/surveys`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/surveys`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
@@ -751,7 +854,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/resultsuniversity`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/resultsuniversity`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
@@ -779,7 +882,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/dashboard`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/dashboard`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
@@ -805,7 +908,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/subjects`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/subjects`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
@@ -856,7 +959,7 @@ class EtlabApiClient {
 
     try {
       // Try to fetch syllabus from ETLab
-      const res = await fetch(`${API_BASE_URL}/syllabus/${courseId}`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/syllabus/${courseId}`, {
         headers: this.getHeaders()
       })
       if (res.ok) {
@@ -901,7 +1004,7 @@ class EtlabApiClient {
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/academicanalysis`, {
+      const res = await this.apiFetch(`${API_BASE_URL}/academicanalysis`, {
         headers: this.getHeaders()
       })
       if (res.ok) {

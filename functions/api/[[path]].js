@@ -4,23 +4,42 @@
  * Routes handled:
  * 1. OPTIONS * -> 204 with full CORS headers
  * 2. /api/image-proxy?url=... or /api/file-proxy?url=... -> Media & file proxy
- * 3. /api/* -> Proxied to https://api.students.etlab.app/api/* with official origin headers
+ * 3. /api/* -> Proxied to ETLab's API (api2.students.etlab.app by default) with official origin headers
  */
 
-const ETLAB_ORIGIN = 'https://api.students.etlab.app';
+// Default ETLab API origin. Override per deployment with the ETLAB_API_ORIGIN environment
+// variable (Cloudflare Pages → Settings → Variables) if ETLab moves again.
+// Keep in sync with src/api/endpoints.ts and vite.config.ts.
+const DEFAULT_ETLAB_ORIGIN = 'https://api2.students.etlab.app';
+const LEGACY_ETLAB_ORIGINS = ['https://api.students.etlab.app', 'https://studentsappgo.onrender.com'];
+const UPSTREAM_HEADER = 'x-etbridge-upstream';
+
+/** Returns a safe https://*.etlab.app origin, or null. Never lets the proxy go elsewhere. */
+function etlabOrigin(raw) {
+  try {
+    const url = new URL(String(raw || '').trim());
+    const host = url.hostname;
+    if (url.protocol !== 'https:') return null;
+    if (host !== 'etlab.app' && !host.endsWith('.etlab.app')) return null;
+    if (LEGACY_ETLAB_ORIGINS.includes(url.origin)) return null;
+    return url.origin;
+  } catch {
+    return null;
+  }
+}
 const OFFICIAL_WEB_ORIGIN = 'https://students.etlab.app';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS, PATCH',
-  'Access-Control-Allow-Headers': 'Origin, Content-Type, Authorization, X-Secret, X-Request-ID, X-Institute-ID, X-Etlab-App, Cache-Control, Pragma, If-None-Match',
+  'Access-Control-Allow-Headers': 'Origin, Content-Type, Authorization, X-Secret, X-Request-ID, X-Institute-ID, X-Etlab-App, X-ETBridge-Upstream, Cache-Control, Pragma, If-None-Match',
   'Access-Control-Expose-Headers': 'ETag, Content-Disposition, X-Session-Token',
   'Access-Control-Max-Age': '86400',
   'Cross-Origin-Resource-Policy': 'cross-origin'
 };
 
 export async function onRequest(context) {
-  const { request } = context;
+  const { request, env } = context;
   const url = new URL(request.url);
 
   // 1. Handle CORS Preflight Requests
@@ -101,9 +120,13 @@ export async function onRequest(context) {
     }
   }
 
-  // 3. API Proxy Route: Forward /api/* -> https://api.students.etlab.app/api/*
+  // 3. API Proxy Route: Forward /api/* -> https://api2.students.etlab.app/api/*
   const targetPath = url.pathname + url.search;
-  const targetUrl = `${ETLAB_ORIGIN}${targetPath}`;
+  const upstream =
+    etlabOrigin(request.headers.get(UPSTREAM_HEADER)) ||
+    etlabOrigin(env && env.ETLAB_API_ORIGIN) ||
+    DEFAULT_ETLAB_ORIGIN;
+  const targetUrl = `${upstream}${targetPath}`;
 
   const forwardHeaders = new Headers();
   const allowedHeaders = [

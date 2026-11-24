@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { etlabClient } from '../api/client'
+import { etlabUrl } from '../api/endpoints'
 
 interface EtlabImageProps {
   src?: string | null
@@ -45,10 +46,10 @@ export const EtlabImage: React.FC<EtlabImageProps> = ({
 
     if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
       fullUrl = cleanPath.startsWith('uploads/')
-        ? `https://api.students.etlab.app/${cleanPath}`
+        ? etlabUrl(cleanPath)
         : institute
         ? `https://${institute}.etlab.app/uploads/${cleanPath}`
-        : `https://api.students.etlab.app/uploads/${cleanPath}`
+        : etlabUrl(`uploads/${cleanPath}`)
     }
 
     // 3. For ETLab hosted assets, use edge image proxy with auth & caching

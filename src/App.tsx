@@ -23,6 +23,7 @@ import { LoadingScreen } from './components/LoadingScreen'
 import { PWAProvider } from './context/PWAContext'
 import { InstallModal } from './components/InstallModal'
 import { MobileInstallBanner } from './components/MobileInstallBanner'
+import { EtlabStatusBanner } from './components/EtlabStatusBanner'
 
 // Smart Root Route Component
 const SmartRoot: React.FC = () => {
@@ -78,6 +79,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <div className="flex-1 flex w-full">
         <Sidebar />
         <main className="flex-1 min-w-0">
+          <EtlabStatusBanner />
           {children}
         </main>
       </div>

@@ -14,6 +14,8 @@ export interface AuthSession {
   username: string
   studentName?: string
   studentPhoto?: string
+  /** Institute-specific ETLab API origin, when ETLab publishes one (see api/endpoints.ts). */
+  apiOrigin?: string
 }
 
 export interface TimetablePeriod {
@@ -39,6 +41,7 @@ export interface DayTimetable {
   day: string
   sub: TimetablePeriod[]
   all_hours_suspended?: boolean
+  holiday_name?: string
 }
 
 export interface StudentProfile {

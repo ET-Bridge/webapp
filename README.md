@@ -90,7 +90,7 @@ A comprehensive, developer-focused technical specification explaining the zero-b
 **[https://etbridge.nimd.me/docs](https://etbridge.nimd.me/docs)** (or route `/docs` locally)
 
 Topics covered in the documentation:
-- **System Architecture & Zero-Backend Design**: Direct browser-to-API communication with `https://api.students.etlab.app/api/v1` without intermediary proxies.
+- **System Architecture & Zero-Backend Design**: Direct browser-to-API communication with `https://api2.students.etlab.app/api/v1` without intermediary proxies.
 - **Reverse-Engineered ETLab REST API Dictionary**: Detailed schemas for `/login`, `/profile`, `/attendancebysubject`, `/timetablenew`, `/evaluations`, `/teachers`, `/dutyleaves`, `/studymaterials`, `/fees`, and `/syllabus`.
 - **75% Attendance & Bunk Margin Algebra**: Mathematical equations for calculating maximum bunk allowance and minimum attendance recovery classes.
 - **Self-Reported Duty Leave Engine**: Hour-level claiming and automatic reconciliation state machine.
@@ -108,7 +108,7 @@ sequenceDiagram
     autonumber
     actor Student as Student Browser / PWA
     participant Local as Device LocalStorage & SW
-    participant ETLab as Official ETLab REST API (api.students.etlab.app)
+    participant ETLab as Official ETLab REST API (api2.students.etlab.app)
 
     Student->>ETLab: Direct Authentication (Username + Password + College ID)
     ETLab-->>Student: Bearer JWT Token + Profile Payload
@@ -120,7 +120,7 @@ sequenceDiagram
 
 ### Security Guarantees
 
-1. **Direct API Communication**: Every network request travels straight from your browser or PWA container to ETLab's official server (`https://api.students.etlab.app`).
+1. **Direct API Communication**: Every network request travels straight from your browser or PWA container to ETLab's official server (`https://api2.students.etlab.app`).
 2. **Zero Credential Logging**: Credentials and authentication tokens are kept strictly in browser `localStorage`. No intermediary server ever sees, processes, or logs student data.
 3. **Auditable Codebase**: The entire implementation is open-source under the MIT license, enabling complete community code review.
 

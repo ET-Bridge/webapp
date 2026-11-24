@@ -1,6 +1,7 @@
 import { defineConfig, Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { DEFAULT_ETLAB_API_ORIGIN } from './src/api/endpoints'
 
 function devImageProxyPlugin(): Plugin {
   return {
@@ -125,7 +126,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://api.students.etlab.app',
+        // Institute-specific upstreams (X-ETBridge-Upstream) are only honoured by the
+        // Cloudflare function; the dev proxy always uses the default origin.
+        target: DEFAULT_ETLAB_API_ORIGIN,
         changeOrigin: true,
         headers: {
           'Origin': 'https://students.etlab.app',

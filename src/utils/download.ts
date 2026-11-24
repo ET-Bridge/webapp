@@ -1,4 +1,5 @@
 import { etlabClient } from '../api/client'
+import { etlabUrl } from '../api/endpoints'
 
 /**
  * Downloads a protected file from ETLab by fetching it with the student's
@@ -24,7 +25,7 @@ export async function downloadFileWithAuth(url: string, suggestedFilename?: stri
   // Ensure absolute URL to ETLab API
   const fullUrl = url.startsWith('http')
     ? url
-    : `https://api.students.etlab.app${url.startsWith('/') ? '' : '/'}${url}`
+    : etlabUrl(url)
 
   const session = etlabClient.getSession()
   const headers: Record<string, string> = {
@@ -83,7 +84,7 @@ export async function viewFileWithAuth(url: string): Promise<void> {
 
   const fullUrl = url.startsWith('http')
     ? url
-    : `https://api.students.etlab.app${url.startsWith('/') ? '' : '/'}${url}`
+    : etlabUrl(url)
 
   const session = etlabClient.getSession()
   const headers: Record<string, string> = {
