@@ -22,3 +22,7 @@
 /etlab-endpoints.json
   Content-Type: application/json; charset=utf-8
   Cache-Control: public, max-age=300
+
+/android-update.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=300

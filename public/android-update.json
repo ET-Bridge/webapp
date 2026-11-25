@@ -1,0 +1,14 @@
+{
+  "versionCode": 3,
+  "versionName": "1.2.0",
+  "minSupportedVersionCode": 2,
+  "apkUrl": "https://github.com/ET-Bridge/android/releases/download/v1.2.0/ETBridge-v1.2.0.apk",
+  "sha256": "7138de51a0d6d5da5805a97b3206c9d120f12b424ee0baf035c6e712f0f869bc",
+  "sizeBytes": 4556840,
+  "notes": [
+    "ETBridge can now update itself: future updates install right from the app",
+    "Downloads are verified (checksum and signing key) before installing",
+    "New \"Check for updates\" option in Settings"
+  ],
+  "releaseUrl": "https://github.com/ET-Bridge/android/releases/tag/v1.2.0"
+}
