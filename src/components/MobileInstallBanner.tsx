@@ -4,7 +4,7 @@ import { usePWA } from '../context/PWAContext'
 import { BrandLogo } from './BrandLogo'
 
 export const MobileInstallBanner: React.FC = () => {
-  const { showPeriodicPrompt, dismissPeriodicPrompt, triggerInstall, isInstalled } = usePWA()
+  const { showPeriodicPrompt, dismissPeriodicPrompt, triggerInstall, isInstalled, isAndroid } = usePWA()
 
   if (!showPeriodicPrompt || isInstalled) {
     return null
@@ -38,11 +38,11 @@ export const MobileInstallBanner: React.FC = () => {
             <h4 className="text-xs font-bold text-white dark:text-white light:text-slate-900 truncate flex items-center gap-1.5">
               <span>Install ETBridge</span>
               <span className="text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-brand-500/15 text-brand-400 border border-brand-500/30">
-                PWA
+                {isAndroid ? 'Android app' : 'PWA'}
               </span>
             </h4>
             <p className="text-[11px] text-zinc-400 dark:text-zinc-400 light:text-slate-600 truncate mt-0.5">
-              Fast, fullscreen & offline access
+              {isAndroid ? 'Native app · works offline · updates itself' : 'Fast, fullscreen & offline access'}
             </p>
           </div>
         </div>
@@ -55,7 +55,7 @@ export const MobileInstallBanner: React.FC = () => {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs shadow-md shadow-brand-500/25 active:scale-95 transition-all"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>Install</span>
+            <span>{isAndroid ? 'Get app' : 'Install'}</span>
           </button>
           <button
             type="button"

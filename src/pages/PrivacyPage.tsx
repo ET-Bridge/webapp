@@ -105,7 +105,7 @@ export const PrivacyPage: React.FC = () => {
           </Link>
 
           <a
-            href="https://github.com/nimdme/et-bridge"
+            href="https://github.com/ET-Bridge/webapp"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-white dark:hover:text-white light:text-slate-600 light:hover:text-slate-900 transition-colors"
@@ -404,12 +404,12 @@ export const PrivacyPage: React.FC = () => {
                     <FileText className="w-4 h-4 shrink-0" />
                     <span>Codebase & Issues:</span>
                     <a
-                      href="https://github.com/nimdme/et-bridge"
+                      href="https://github.com/ET-Bridge/webapp"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:text-white dark:hover:text-white light:hover:text-slate-900 underline"
                     >
-                      github.com/nimdme/et-bridge
+                      github.com/ET-Bridge/webapp
                     </a>
                   </div>
                 </div>

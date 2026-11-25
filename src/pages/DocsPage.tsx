@@ -107,7 +107,7 @@ export const DocsPage: React.FC = () => {
 
         <div className="flex items-center gap-3 text-xs font-mono">
           <a
-            href="https://github.com/nimdme/et-bridge"
+            href="https://github.com/ET-Bridge/webapp"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-white dark:hover:text-white light:text-slate-600 light:hover:text-slate-900 transition-colors"

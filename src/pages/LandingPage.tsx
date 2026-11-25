@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { BrandLogo } from '../components/BrandLogo'
 import { usePWA } from '../context/PWAContext'
+import { ANDROID_RELEASES_URL, formatApkSize, useAndroidRelease } from '../utils/androidApp'
 
 interface FAQItem {
   question: string
@@ -44,7 +45,7 @@ const FAQ_ITEMS: FAQItem[] = [
   },
   {
     question: 'Can I install this on my iPhone or Android device?',
-    answer: 'Yes. ETBridge is built as a Progressive Web App (PWA). You can add it directly to your home screen via Chrome or Safari. It runs in full screen without browser toolbars, starts instantly, and caches data for offline access.'
+    answer: 'Yes. On Android, install the native ETBridge app: download the APK from this page or GitHub Releases. It works offline, has home-screen widgets and notifications, and updates itself. On iPhone and iPad, add the web app to your home screen from Safari (Share → Add to Home Screen); it runs full screen and caches data for offline access.'
   }
 ]
 
@@ -52,6 +53,8 @@ export const LandingPage: React.FC = () => {
   const { isAuthenticated, loginDemo } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const { openInstallModal } = usePWA()
+  const androidRelease = useAndroidRelease()
+  const apkSize = formatApkSize(androidRelease?.sizeBytes)
   const navigate = useNavigate()
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null)
 
@@ -93,7 +96,7 @@ export const LandingPage: React.FC = () => {
             </Link>
 
             <a
-              href="https://github.com/nimdme/et-bridge"
+              href="https://github.com/ET-Bridge/webapp"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1 text-zinc-400 hover:text-white dark:hover:text-white light:text-slate-600 light:hover:text-slate-900 transition-colors font-mono"
@@ -151,7 +154,7 @@ export const LandingPage: React.FC = () => {
             </Link>
 
             <a
-              href="https://github.com/nimdme/et-bridge"
+              href="https://github.com/ET-Bridge/webapp"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl border border-zinc-800 dark:border-zinc-800 light:border-slate-300 bg-zinc-900/60 dark:bg-zinc-900/60 light:bg-white text-zinc-200 dark:text-zinc-200 light:text-slate-800 hover:bg-zinc-800 dark:hover:bg-zinc-800 light:hover:bg-slate-100 text-xs sm:text-sm font-semibold transition-all active:scale-95 group"
@@ -170,13 +173,13 @@ export const LandingPage: React.FC = () => {
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
               <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-brand-400 dark:text-brand-400 light:text-brand-700 block">
-                Mobile Web Application
+                Android App · iPhone Web App
               </span>
               <h2 className="text-lg font-bold text-white dark:text-white light:text-slate-900">
                 Install ETBridge on Your Phone
               </h2>
               <p className="text-xs sm:text-sm text-zinc-300 dark:text-zinc-300 light:text-slate-600 leading-relaxed">
-                ETBridge is a Progressive Web App (PWA). You can install it directly to your home screen on Android (Chrome/Brave) or iPhone (Safari). It opens fullscreen like a native app, requires zero App Store downloads, and caches your timetable and attendance for offline access in class.
+                On Android, get the native ETBridge app: fast, works offline, with home-screen widgets, attendance and class notifications, and automatic updates. On iPhone and iPad, add ETBridge to your home screen from Safari. It opens fullscreen and caches your timetable and attendance for offline access in class.
               </p>
             </div>
 
@@ -185,13 +188,28 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          <button
-            onClick={() => openInstallModal()}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs transition-all shadow-sm"
-          >
-            <Download className="w-4 h-4" />
-            <span>Open Detailed Installation Instructions</span>
-          </button>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <a
+              href={androidRelease?.apkUrl ?? ANDROID_RELEASES_URL}
+              target={androidRelease ? undefined : '_blank'}
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs transition-all shadow-sm"
+            >
+              <Download className="w-4 h-4" />
+              <span>
+                Download Android App
+                {androidRelease?.versionName ? ` · v${androidRelease.versionName}` : ''}
+                {apkSize ? ` · ${apkSize}` : ''}
+              </span>
+            </a>
+            <button
+              onClick={() => openInstallModal()}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-zinc-700 dark:border-zinc-700 light:border-slate-300 text-zinc-200 dark:text-zinc-200 light:text-slate-700 hover:bg-zinc-800/60 dark:hover:bg-zinc-800/60 light:hover:bg-slate-100 font-semibold text-xs transition-all"
+            >
+              <Smartphone className="w-4 h-4" />
+              <span>Installation Instructions (Android & iPhone)</span>
+            </button>
+          </div>
         </section>
 
         {/* Why this project was made */}
@@ -281,7 +299,7 @@ export const LandingPage: React.FC = () => {
 
             <div className="pt-2 text-xs">
               <a
-                href="https://github.com/nimdme/et-bridge"
+                href="https://github.com/ET-Bridge/webapp"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-brand-400 hover:underline font-mono"
@@ -392,7 +410,7 @@ export const LandingPage: React.FC = () => {
                 Install
               </button>
               <a
-                href="https://github.com/nimdme/et-bridge"
+                href="https://github.com/ET-Bridge/webapp"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 hover:text-white dark:hover:text-white light:hover:text-slate-900 transition-colors"

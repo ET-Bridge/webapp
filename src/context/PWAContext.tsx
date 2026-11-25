@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { isAndroidDevice } from '../utils/androidApp'
 
 // Capture beforeinstallprompt immediately at the module evaluation time
 // to avoid missing the event if it fires before React components mount.
@@ -31,6 +32,8 @@ interface PWAContextType {
   showPeriodicPrompt: boolean
   dismissPeriodicPrompt: (days?: number) => void
   isMobileDevice: boolean
+  /** Android gets the native app (APK) instead of the PWA install flow. */
+  isAndroid: boolean
 }
 
 const PWAContext = createContext<PWAContextType | undefined>(undefined)
@@ -43,6 +46,7 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return isStandaloneMode() || localStorage.getItem('etbridge_pwa_installed') === 'true'
   })
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false)
+  const [isAndroid] = useState<boolean>(() => isAndroidDevice())
   const [showPeriodicPrompt, setShowPeriodicPrompt] = useState(false)
   const [isMobileDevice, setIsMobileDevice] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false
@@ -157,6 +161,12 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [])
 
   const triggerInstall = useCallback(async (): Promise<'accepted' | 'dismissed' | 'modal_opened'> => {
+    // Android: point to the native app instead of installing the PWA.
+    if (isAndroid) {
+      setIsInstallModalOpen(true)
+      return 'modal_opened'
+    }
+
     const promptEvent = deferredPrompt || globalDeferredPrompt
     if (promptEvent) {
       try {
@@ -187,7 +197,7 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // No native prompt available (iOS Safari, or Chrome without prompt triggered yet)
     setIsInstallModalOpen(true)
     return 'modal_opened'
-  }, [deferredPrompt, dismissPeriodicPrompt])
+  }, [deferredPrompt, dismissPeriodicPrompt, isAndroid])
 
   return (
     <PWAContext.Provider
@@ -203,6 +213,7 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         showPeriodicPrompt,
         dismissPeriodicPrompt,
         isMobileDevice,
+        isAndroid,
       }}
     >
       {children}

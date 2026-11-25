@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/nimdme/et-bridge">
+  <a href="https://github.com/ET-Bridge/webapp">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="public/img/logo/logo-dark.png">
       <source media="(prefers-color-scheme: light)" srcset="public/img/logo/logo-light.png">
@@ -35,7 +35,7 @@
   <a href="https://etbridge.nimd.me/docs">
     <img src="https://img.shields.io/badge/Docs-Technical%20Reference-6366f1?style=flat-square" alt="Documentation" />
   </a>
-  <a href="https://github.com/nimdme/et-bridge">
+  <a href="https://github.com/ET-Bridge/webapp">
     <img src="https://img.shields.io/badge/Backend-Zero--Knowledge%20(Direct%20API)-10b981?style=flat-square" alt="Zero Backend" />
   </a>
 </p>
@@ -53,7 +53,7 @@
   - [Duty Leave Projection](#duty-leave-projection)
   - [Live Timetable & Substitutions](#live-timetable--substitutions)
   - [Offline Caching](#offline-caching)
-- [Mobile PWA Installation](#mobile-pwa-installation)
+- [Mobile Installation](#mobile-installation)
 - [Local Development](#local-development)
 - [Deployment](#deployment)
 - [Supported Institutions](#supported-institutions)
@@ -168,17 +168,22 @@ Official duty leave entries submitted to faculty coordinators often take days or
 
 ---
 
-## Mobile PWA Installation
+## Mobile Installation
 
-ETBridge is a Progressive Web App (PWA). It does not require downloading from the Google Play Store or Apple App Store.
+### Android: native app
+Android has a native Kotlin/Compose app ([ET-Bridge/android](https://github.com/ET-Bridge/android)) with
+offline data, home-screen widgets, notifications and in-app updates.
 
-### Android (Google Chrome / Brave)
-1. Navigate to the ETBridge web deployment URL.
-2. Tap the **Install App** button on the home page, or tap the three dots in the top-right corner of Chrome.
-3. Select **Add to Home screen** or **Install app**.
-4. ETBridge will install as a standalone application on your home screen and app drawer.
+1. On [etbridge.nimd.me](https://etbridge.nimd.me), tap **Download Android App**. Or grab
+   `ETBridge-vX.Y.Z.apk` from [GitHub Releases](https://github.com/ET-Bridge/android/releases/latest).
+2. Open the downloaded file. If Android asks, allow your browser to **Install unknown apps**.
+3. Tap **Install**. Later versions update from inside the app.
 
-### iOS / iPadOS (Safari)
+The download button reads the current APK link from `public/android-update.json` (written by the
+Android repo's `scripts/release.sh`), so it always points at the latest release.
+
+### iOS / iPadOS (Safari): web app
+ETBridge is a Progressive Web App (PWA), so no App Store download is needed.
 1. Open the deployment URL in **Safari**.
 2. Tap the **Share** button (the square icon with an upward arrow) at the bottom toolbar.
 3. Scroll down and tap **Add to Home Screen**.
@@ -198,7 +203,7 @@ ETBridge is a Progressive Web App (PWA). It does not require downloading from th
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/nimdme/et-bridge.git
+git clone https://github.com/ET-Bridge/webapp.git
 cd et-bridge
 
 # 2. Install dependencies
@@ -260,7 +265,7 @@ To sign in, select or enter your college's institute code alongside your normal 
 
 Created and maintained by [NiMD](https://nimd.me) (Niranjan M D).
 
-If you encounter a bug, have a feature suggestion, or would like to contribute, please [open an issue](https://github.com/nimdme/et-bridge/issues) or submit a pull request on GitHub.
+If you encounter a bug, have a feature suggestion, or would like to contribute, please [open an issue](https://github.com/ET-Bridge/webapp/issues) or submit a pull request on GitHub.
 
 ---
 

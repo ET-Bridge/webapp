@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Download, X, Share, PlusSquare, MoreVertical, Smartphone, Check } from 'lucide-react'
+import { Download, X, Share, PlusSquare, Smartphone, Check, ExternalLink, ShieldCheck } from 'lucide-react'
 import { usePWA } from '../context/PWAContext'
+import { ANDROID_RELEASES_URL, formatApkSize, useAndroidRelease } from '../utils/androidApp'
 
 interface InstallModalProps {
   isOpen?: boolean
@@ -8,10 +9,12 @@ interface InstallModalProps {
 }
 
 export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) => {
-  const { isInstallModalOpen, closeInstallModal, deferredPrompt, triggerInstall, isInstalled } = usePWA()
+  const { isInstallModalOpen, closeInstallModal, deferredPrompt, triggerInstall, isInstalled, isAndroid } = usePWA()
   const [activeTab, setActiveTab] = useState<'android' | 'ios'>('android')
 
   const effectiveIsOpen = isOpen !== undefined ? isOpen : isInstallModalOpen
+  const release = useAndroidRelease(effectiveIsOpen)
+  const apkSize = formatApkSize(release?.sizeBytes)
 
   const handleClose = () => {
     if (onClose) onClose()
@@ -56,19 +59,21 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
           </div>
           <div>
             <h3 className="text-lg font-bold text-white dark:text-white light:text-slate-900">Install ETBridge App</h3>
-            <p className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-500">Fast, offline-ready, opens without browser tabs</p>
+            <p className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-500">
+              {activeTab === 'android' ? 'Native Android app · free & open source' : 'Fast, offline-ready, opens without browser tabs'}
+            </p>
           </div>
         </div>
 
-        {/* One-click button if Chrome/Edge native prompt available */}
-        {deferredPrompt && !isInstalled && (
+        {/* One-click PWA install for desktop Chrome/Edge (Android phones get the native app below) */}
+        {deferredPrompt && !isInstalled && !isAndroid && (
           <div className="mb-5">
             <button
               onClick={handleInstallClick}
               className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold shadow-lg shadow-brand-500/20 transition-all active:scale-95"
             >
               <Download className="w-4 h-4" />
-              <span>Tap to Install to Home Screen</span>
+              <span>Install on this device</span>
             </button>
           </div>
         )}
@@ -83,7 +88,7 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            Android (Chrome / Brave)
+            Android app
           </button>
           <button
             onClick={() => setActiveTab('ios')}
@@ -100,24 +105,48 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
         {/* Instructions */}
         {activeTab === 'android' ? (
           <div className="space-y-3 text-sm text-zinc-300 dark:text-zinc-300 light:text-slate-700">
+            <a
+              href={release?.apkUrl ?? ANDROID_RELEASES_URL}
+              target={release ? undefined : '_blank'}
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold shadow-lg shadow-brand-500/20 transition-all active:scale-95"
+            >
+              <Download className="w-4 h-4" />
+              <span>
+                Download for Android
+                {release?.versionName ? ` · v${release.versionName}` : ''}
+                {apkSize ? ` · ${apkSize}` : ''}
+              </span>
+            </a>
             <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-950/60 dark:bg-zinc-950/60 light:bg-slate-50 border border-zinc-800/80 dark:border-zinc-800/80 light:border-slate-200">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 text-xs font-bold text-zinc-300 dark:text-zinc-300 light:text-slate-700 shrink-0">1</span>
               <div>
-                <p className="font-medium text-white dark:text-white light:text-slate-900 flex items-center gap-1.5">
-                  Tap the browser menu <MoreVertical className="w-4 h-4 text-zinc-400 inline" />
-                </p>
-                <p className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-500">At the top right corner of Chrome or Brave.</p>
+                <p className="font-medium text-white dark:text-white light:text-slate-900">Open the downloaded file</p>
+                <p className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-500">From the download notification, or Files → Downloads (ETBridge-v….apk).</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-950/60 dark:bg-zinc-950/60 light:bg-slate-50 border border-zinc-800/80 dark:border-zinc-800/80 light:border-slate-200">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 text-xs font-bold text-zinc-300 dark:text-zinc-300 light:text-slate-700 shrink-0">2</span>
               <div>
-                <p className="font-medium text-white dark:text-white light:text-slate-900 flex items-center gap-1.5">
-                  Select <span className="text-brand-400 font-semibold">"Install App"</span> or <span className="text-brand-400 font-semibold">"Add to Home screen"</span>
-                </p>
-                <p className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-500">The app will download instantly like a native app.</p>
+                <p className="font-medium text-white dark:text-white light:text-slate-900">Allow the install if Android asks</p>
+                <p className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-500">Tap Settings, turn on &ldquo;Allow from this source&rdquo; for your browser, then go back.</p>
               </div>
             </div>
+            <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-950/60 dark:bg-zinc-950/60 light:bg-slate-50 border border-zinc-800/80 dark:border-zinc-800/80 light:border-slate-200">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-zinc-800 dark:bg-zinc-800 light:bg-slate-200 text-xs font-bold text-zinc-300 dark:text-zinc-300 light:text-slate-700 shrink-0">3</span>
+              <div>
+                <p className="font-medium text-white dark:text-white light:text-slate-900">Tap Install</p>
+                <p className="text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-500">Sign in with your ETLab username and password. Future updates install from inside the app.</p>
+              </div>
+            </div>
+            <a
+              href={ANDROID_RELEASES_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-brand-400 hover:text-brand-300"
+            >
+              All releases & checksums on GitHub <ExternalLink className="w-3 h-3" />
+            </a>
           </div>
         ) : (
           <div className="space-y-3 text-sm text-zinc-300 dark:text-zinc-300 light:text-slate-700">
@@ -144,10 +173,21 @@ export const InstallModal: React.FC<InstallModalProps> = ({ isOpen, onClose }) =
 
         {/* Benefits badge */}
         <div className="mt-5 pt-4 border-t border-zinc-800 dark:border-zinc-800 light:border-slate-200 flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-400 light:text-slate-500">
-          <span className="flex items-center gap-1 text-emerald-400">
-            <Check className="w-3.5 h-3.5" /> No App Store fees or downloads
-          </span>
-          <span>Zero battery drain</span>
+          {activeTab === 'android' ? (
+            <>
+              <span className="flex items-center gap-1 text-emerald-400">
+                <ShieldCheck className="w-3.5 h-3.5" /> Signed release, open source
+              </span>
+              <span>Android 8.0+</span>
+            </>
+          ) : (
+            <>
+              <span className="flex items-center gap-1 text-emerald-400">
+                <Check className="w-3.5 h-3.5" /> No App Store fees or downloads
+              </span>
+              <span>Zero battery drain</span>
+            </>
+          )}
         </div>
       </div>
     </div>
