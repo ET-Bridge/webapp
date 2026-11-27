@@ -1,12 +1,17 @@
 {
-  "versionCode": 5,
-  "versionName": "1.2.2",
+  "versionCode": 6,
+  "versionName": "1.3.0",
   "minSupportedVersionCode": 2,
-  "apkUrl": "https://github.com/ET-Bridge/android/releases/download/v1.2.2/ETBridge-v1.2.2.apk",
-  "sha256": "172da909bc3c979b475bca814f3d2931501a63a84adc56f50a3a39cf878b7c32",
-  "sizeBytes": 4556840,
+  "apkUrl": "https://github.com/ET-Bridge/android/releases/download/v1.3.0/ETBridge-v1.3.0.apk",
+  "sha256": "8d3bc63ad995a55f759a901f72e4837dd3ede16afb751439093bcc49ca3b0e5a",
+  "sizeBytes": 4610181,
   "notes": [
-    "Campus crashed when switching tabs"
+    "Customize Home",
+    "Assignment deadlines on Home",
+    "Vibrant palette",
+    "App info",
+    "Redesigned widgets",
+    "Sending feedback no longer shows a false error"
   ],
-  "releaseUrl": "https://github.com/ET-Bridge/android/releases/tag/v1.2.2"
+  "releaseUrl": "https://github.com/ET-Bridge/android/releases/tag/v1.3.0"
 }
