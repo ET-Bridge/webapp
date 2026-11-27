@@ -1,13 +1,12 @@
 {
-  "versionCode": 4,
-  "versionName": "1.2.1",
+  "versionCode": 5,
+  "versionName": "1.2.2",
   "minSupportedVersionCode": 2,
-  "apkUrl": "https://github.com/ET-Bridge/android/releases/download/v1.2.1/ETBridge-v1.2.1.apk",
-  "sha256": "4f8c4f50eb2d8d8a762e07c401a3dc4bddb91fd6b2f36bda2e0ffeda659538b0",
+  "apkUrl": "https://github.com/ET-Bridge/android/releases/download/v1.2.2/ETBridge-v1.2.2.apk",
+  "sha256": "172da909bc3c979b475bca814f3d2931501a63a84adc56f50a3a39cf878b7c32",
   "sizeBytes": 4556840,
   "notes": [
-    "The More tab now always opens on its menu, not the last screen you visited",
-    "About screen shows ETLab's current API server and links to the Android source code"
+    "Campus crashed when switching tabs"
   ],
-  "releaseUrl": "https://github.com/ET-Bridge/android/releases/tag/v1.2.1"
+  "releaseUrl": "https://github.com/ET-Bridge/android/releases/tag/v1.2.2"
 }
